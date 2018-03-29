@@ -6,6 +6,9 @@ import threading
 
 
 class RepeatedTimer(object):
+    """
+    Added by Wells
+    """
     def __init__(self, interval, function, *args, **kwargs):
         self._timer = None
         self.interval = interval
@@ -30,8 +33,10 @@ class RepeatedTimer(object):
         self.is_running = False
 
 
-class TaskThread(threading.Thread):
-    """Thread that executes a task every N seconds"""
+class TimerThread(threading.Thread):
+    """Thread that executes a task every N seconds
+    Added by Wells
+    """
 
     def __init__(self, interval, function, *args, **kwargs):
         threading.Thread.__init__(self)
@@ -69,7 +74,7 @@ if __name__ == '__main__':
         print "Hello %s!" % name
     print "starting..."
     #rt = RepeatedTimer(1, hello, "World")
-    rt = TaskThread(0.1, hello, "World")
+    rt = TimerThread(0.1, hello, "World")
     rt.start()
     print "main thread"
     sleep(3)

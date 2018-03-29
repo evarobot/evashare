@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-
+import time
+import hashlib
 import re
 import collections
 import os
@@ -12,6 +13,40 @@ PROJECT_DIR = os.path.realpath(os.path.join(
 CORPUS_DIR = os.path.join(PROJECT_DIR, 'data', 'corpus')
 SEP_MARK = '$@'
 g_word2pinyin = {}
+
+# 单例类的装饰器
+def singleton(cls):
+    """
+    @param cls:类名, 注意不是类实例
+    """
+    _instance = {}
+
+    def _wrapper(*args, **kwargs):
+        if cls not in _instance:
+            _instance[cls] = cls(*args, **kwargs)
+        return _instance[cls]
+    return _wrapper
+
+
+# 计算函数执行时间的花费
+def time_cost(func):
+    """
+    @param func:函数对象实例
+    """
+    def _wrapper(*args, **kwargs):
+        start_time = time.time()
+        res = func(*args, **kwargs)
+        now_time = time.time()
+        cost_time = (now_time - start_time)
+        print("cost time =%f" % cost_time)
+        return res
+    return _wrapper
+
+
+def md5(text):
+    m = hashlib.md5()
+    m.update(text)
+    return m.hexdigest()
 
 
 def simple2tradition(line):

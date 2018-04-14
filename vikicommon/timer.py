@@ -74,7 +74,7 @@ if __name__ == '__main__':
         print "Hello %s!" % name
     print "starting..."
     #rt = RepeatedTimer(1, hello, "World")
-    rt = TimerThread(0.1, hello, "World")
+    rt = TimerThread(1, hello, "World")
     rt.start()
     print "main thread"
     sleep(3)

@@ -63,13 +63,12 @@ class DaemonFileLogHandler2(logging.FileHandler):
 
 
 def init_logger(logger=None, level="INFO", path="./"):
+    if not logger:
+        logger = logging.getLogger()
+    logger.setLevel(getattr(logging, level.upper()))
     global initialised
     if initialised:
         return
-    if not logger:
-        logger = logging.getLogger()
-
-    logger.setLevel(getattr(logging, level.upper()))
     # channel = logging.StreamHandler()
     channel = logging.StreamHandler(make_unistream(sys.stdout))
     channel.setFormatter(LogFormatter())

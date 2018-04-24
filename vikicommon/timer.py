@@ -81,12 +81,13 @@ class _TimerReset(Thread):
     t.cancel() # stop the timer's action if it's still waiting
     """
 
-    def __init__(self, interval, function, args=[], kwargs={}):
+    def __init__(self, owner, interval, function, args=[], kwargs={}):
         Thread.__init__(self)
         self.interval = interval
         self.function = function
         self.args = args
         self.kwargs = kwargs
+        self.owner = owner
         self.finished = Event()
         self.resetted = True
 
@@ -95,7 +96,6 @@ class _TimerReset(Thread):
         self.finished.set()
 
     def run(self):
-        print "wait---------------------------"
         while self.resetted:
             self.resetted = False
             self.finished.wait(self.interval)
@@ -103,7 +103,6 @@ class _TimerReset(Thread):
         if not self.finished.isSet():
             self.function(*self.args, **self.kwargs)
         self.finished.set()
-        print "Done..........................."
 
     def reset(self, interval=None):
         """ Reset the timer """
@@ -122,7 +121,7 @@ def test_timer_reset():
 
     # No reset
     print "Time: %s - start..." % time.asctime()
-    tim = TimerReset(5, hello)
+    tim = TimerReset("test", 5, hello)
     tim.start()
     print "Time: %s - sleeping for 10..." % time.asctime()
     time.sleep(10)
@@ -132,7 +131,7 @@ def test_timer_reset():
 
     # With Reset
     print "Time: %s - start..." % time.asctime()
-    tim = TimerReset(5, hello)
+    tim = TimerReset("test", 5, hello)
     tim.start()
     print "Time: %s - sleeping for 4..." % time.asctime()
     time.sleep(4)
@@ -145,7 +144,7 @@ def test_timer_reset():
 
     # With reset interval
     print "Time: %s - start..." % time.asctime()
-    tim = TimerReset(5, hello)
+    tim = TimerReset("test", 5, hello)
     tim.start()
     print "Time: %s - sleeping for 4..." % time.asctime()
     time.sleep(4)

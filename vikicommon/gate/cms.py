@@ -21,7 +21,7 @@ class CMSGate(object):
                                                 domain_id)
         data = requests.get(url, timeout=self.request_timeout)
         assert(data.status_code == 200)
-        return data.text
+        return json.loads(data.text)
 
     def event_id_to_answer(self, domain_id, event_id):
         """
@@ -68,7 +68,7 @@ class CMSGate(object):
             self.host, self.port, domain_id)
         data = requests.get(url, timeout=self.request_timeout)
         assert(data.status_code == 200)
-        return data.text
+        return json.loads(data.text)
 
     def get_domain_slots(self, domain_id):
         url = "http://{0}:{1}/v2/rpc/get_domain_slots".format(
@@ -81,7 +81,7 @@ class CMSGate(object):
                              headers=headers,
                              timeout=self.request_timeout)
         assert(data.status_code == 200)
-        return data.text
+        return json.loads(data.text)
 
     def get_slot_values_for_nlu(self, slot_id):
         url = "http://{0}:{1}/v2/rpc/get_slot_values_for_nlu".format(
@@ -94,7 +94,7 @@ class CMSGate(object):
                              headers=headers,
                              timeout=self.request_timeout)
         assert(data.status_code == 200)
-        return data.text
+        return json.loads(data.text)
 
     def get_tree_label_data(self, domain_id):
         url = "http://{0}:{1}/v2/rpc/get_tree_label_data".format(
@@ -107,7 +107,7 @@ class CMSGate(object):
                              headers=headers,
                              timeout=self.request_timeout)
         assert(data.status_code == 200)
-        return data.text
+        return json.loads(data.text)
 
     def get_intent_slots_without_value(self, domain_id, intent_name):
         url = "http://{0}:{1}/v2/rpc/get_intent_slots_without_value".format(
@@ -121,14 +121,14 @@ class CMSGate(object):
                              headers=headers,
                              timeout=self.request_timeout)
         assert(data.status_code == 200)
-        return data.text
+        return json.loads(data.text)
 
     def get_domain_values(self, domain_id):
         url = "http://{0}:{1}/v2/domains/{2}/values".format(
             self.host, self.port, domain_id)
         data = requests.get(url, timeout=self.request_timeout)
         assert(data.status_code == 200)
-        return data.text
+        return json.loads(data.text)
 
     def train_notify(self, data):
         url = "http://{0}:{1}/v2/rpc/robot/train_notify".format(
@@ -139,7 +139,7 @@ class CMSGate(object):
                             headers=headers,
                             timeout=self.request_timeout)
         assert(ret.status_code == 200)
-        return ret.text
+        return json.loads(ret.text)
 
 
 cms_gate = CMSGate(ConfigCMS.host, ConfigCMS.port)

@@ -20,8 +20,8 @@ try:
 except ImportError:
     codecs = None
 
-unicode_type = unicode
-basestring_type = basestring
+unicode_type = str
+basestring_type = str
 initialised = False
 
 

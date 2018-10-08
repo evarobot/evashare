@@ -58,11 +58,11 @@ def unescape_string_literal(literal, encoding):
 
     else:
 
-        content = literal[1:-1].decode('string-escape')
+        content = literal[1:-1]
 
         # keep it escaped if the encoding doesn't work on it
         try:
-            content.decode(encoding)
+            content
         except UnicodeDecodeError:
             return literal
 
@@ -93,9 +93,9 @@ def make_unistream(stream):
 
 def runs_in_ipython():
     '''Check if we are in IPython.'''
-    import __builtin__
-    return '__IPYTHON__' in __builtin__.__dict__ and \
-           __builtin__.__dict__['__IPYTHON__']
+    import builtins
+    return '__IPYTHON__' in builtins.__dict__ and \
+           builtins.__dict__['__IPYTHON__']
 
 
 stdout = None

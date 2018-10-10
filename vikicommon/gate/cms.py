@@ -6,7 +6,7 @@ from vikicommon.config import ConfigCMS
 
 class CMSGate(object):
     """"""
-    request_timeout = 5
+    request_timeout = 10
 
     def __init__(self, host, port):
         self.host = host

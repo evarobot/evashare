@@ -196,7 +196,7 @@ def cn2digit(a, encoding="utf-8"):
 
 def generate_base_url(host, port, sidecar_url, service_id):
     if sidecar_url:
-        return "http://{}/{}".format(sidecar_url, service_id)
+        return "{}/{}".format(sidecar_url, service_id)
     return 'http://{}:{}'.format(str(host), str(port))
 
 

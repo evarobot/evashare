@@ -37,4 +37,4 @@ class DMGate(object):
         return ret.text
 
 
-dm_gate = DMGate(ConfigDM.host, ConfigDM.port, ConfigDM.sidecar_url)
+dm_gate = DMGate(ConfigDM.host, ConfigDM.port, Config.sidecar_url)

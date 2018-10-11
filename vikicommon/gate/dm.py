@@ -1,14 +1,16 @@
 # encoding=utf-8
 import json
 import requests
-from vikicommon.config import ConfigDM
+from vikicommon.config import ConfigDM, Config
 from vikicommon.util.util import generate_base_url
 
 
 class DMGate(object):
     """"""
-    def __init__(self, host, port, url):
-        self.base_url = generate_base_url(host, port, url)
+    def __init__(self, host, port, sidecar_url):
+        self.base_url = generate_base_url(host, port,
+                                          sidecar_url,
+                                          "sidecar-vikidm")
 
     def process_question(self, data, timeout=3):
         url = self.base_url + '/dm/robot/question/'
@@ -35,4 +37,4 @@ class DMGate(object):
         return ret.text
 
 
-dm_gate = DMGate(ConfigDM.host, ConfigDM.port, ConfigDM.base_url)
+dm_gate = DMGate(ConfigDM.host, ConfigDM.port, ConfigDM.sidecar_url)

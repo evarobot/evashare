@@ -1,7 +1,7 @@
 # coding=utf-8
 import json
 import requests
-from vikicommon.config import ConfigCMS
+from vikicommon.config import ConfigCMS, Config
 from vikicommon.util.util import generate_base_url
 
 
@@ -9,8 +9,9 @@ class CMSGate(object):
     """"""
     request_timeout = 10
 
-    def __init__(self, host, port, url):
-        self.base_url = generate_base_url(host, port, url)
+    def __init__(self, host, port, sidecar_url):
+        self.base_url = generate_base_url(host, port,
+                                          sidecar_url, "sidecar-vikicms")
 
     def get_dm_biztree(self, domain_id):
         """ Call CMS module for tree.
@@ -131,4 +132,4 @@ class CMSGate(object):
         return json.loads(ret.text)
 
 
-cms_gate = CMSGate(ConfigCMS.host, ConfigCMS.port, ConfigCMS.base_url)
+cms_gate = CMSGate(ConfigCMS.host, ConfigCMS.port, Config.sidecar_url)

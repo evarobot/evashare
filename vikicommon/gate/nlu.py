@@ -2,15 +2,16 @@
 
 import json
 import requests
-from vikicommon.config import ConfigNLU
+from vikicommon.config import ConfigNLU, Config
 from vikicommon.util.util import generate_base_url
 
 
 class NLUGate(object):
     request_timeout = 5
 
-    def __init__(self, host, port, url):
-        self.base_url = generate_base_url(host, port, url)
+    def __init__(self, host, port, sidecar_url):
+        self.base_url = generate_base_url(host, port,
+                                          sidecar_url, "sidecar-vikinlu")
 
     def predict(self, domain_id, context, question):
         """
@@ -64,4 +65,4 @@ class NLUGate(object):
         return json.loads(data.text)
 
 
-nlu_gate = NLUGate(ConfigNLU.host, ConfigNLU.port, ConfigNLU.base_url)
+nlu_gate = NLUGate(ConfigNLU.host, ConfigNLU.port, Config.sidecar_url)

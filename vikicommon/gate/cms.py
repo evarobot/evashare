@@ -1,8 +1,12 @@
 # coding=utf-8
 import json
 import requests
+import logging
 from vikicommon.config import ConfigCMS, Config
 from vikicommon.util.util import generate_base_url
+
+
+logger = logging.getLogger(__name__)
 
 
 class CMSGate(object):
@@ -19,6 +23,7 @@ class CMSGate(object):
         """
         url = self.base_url + '/v2/{}/dm'.format(domain_id)
         data = requests.get(url, timeout=self.request_timeout)
+        logger.info("GET %s %s", url, data.status_code)
         assert(data.status_code == 200)
         return json.loads(data.text)
 

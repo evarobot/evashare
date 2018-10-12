@@ -3,7 +3,6 @@
 import logging
 import sys
 from datetime import datetime
-from vikicommon.util.uniout import make_unistream
 
 try:
     import colorama
@@ -39,14 +38,14 @@ class DaemonFileLogHandler2(logging.FileHandler):
 
     def _open(self):
         if self.encoding is None:
-            stream = make_unistream(open(self.get_cur_filename(), self.mode))
+            stream = open(self.get_cur_filename(), self.mode)
         else:
-            stream = make_unistream(codecs.open(self.get_cur_filename(), self.mode, self.encoding))
+            stream = codecs.open(self.get_cur_filename(), self.mode, self.encoding)
         return stream
 
     def _get_stream(self):
         if self.stream is None:
-            self.stream = make_unistream(self._open())
+            self.stream = self._open()
         else:
             cur_filename = self.get_cur_filename()
             if cur_filename != self.stream.name:
@@ -70,7 +69,7 @@ def init_logger(logger=None, level="INFO", path="./"):
     if initialised:
         return
     # channel = logging.StreamHandler()
-    channel = logging.StreamHandler(make_unistream(sys.stdout))
+    channel = logging.StreamHandler(sys.stdout)
     channel.setFormatter(LogFormatter())
     logger.addHandler(channel)
 
@@ -112,7 +111,6 @@ class ProgressConsoleHandler(logging.StreamHandler):
     def emit(self, record):
         msg = self.format(record)
         stream = self.stream
-        stream = make_unistream(stream)
         stream.write(msg)
         #self.flush()
 
@@ -134,7 +132,6 @@ class DaemonFileLogHandler(logging.FileHandler):
             stream = open(self.get_cur_filename(), self.mode)
         else:
             stream = codecs.open(self.get_cur_filename(), self.mode, self.encoding)
-        stream = make_unistream(stream)
         return stream
 
     def _get_stream(self):

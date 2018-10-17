@@ -193,6 +193,9 @@ def cn2digit(a, encoding="utf-8"):
     result = result + Billion
     return result
 
+def generate_base_url(host, port, url=None):
+    return 'http://{}:{}'.format(str(host), str(port)) if not url else url
+
 
 if __name__ == '__main__':
     print cn2digit("一千三百")

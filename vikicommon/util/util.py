@@ -193,8 +193,11 @@ def cn2digit(a, encoding="utf-8"):
     result = result + Billion
     return result
 
-def generate_base_url(host, port, url=None):
-    return 'http://{}:{}'.format(str(host), str(port)) if not url else url
+
+def generate_base_url(host, port, sidecar_url, service_id):
+    if sidecar_url:
+        return "{}/{}".format(sidecar_url, service_id)
+    return 'http://{}:{}'.format(str(host), str(port))
 
 
 if __name__ == '__main__':

@@ -41,7 +41,7 @@ class CMSGate(object):
             'response_id': response_id
         }
         headers = {'content-type': 'application/json'}
-        url = "http://{0}:{1}/v2/response_id_to_answer".format(self.host, self.port)
+        url = self.base_url + '/v2/response_id_to_answer'
         data = requests.post(url,
                              data=json.dumps(params),
                              headers=headers,

@@ -4,7 +4,7 @@ import os
 class _ConfigCMS(object):
     request_timeout = 10.0
     _host = "127.0.0.1"
-    _port = 8888
+    _port = 7777
 
     @property
     def host(self):
@@ -20,7 +20,7 @@ class _ConfigCMS(object):
 class _ConfigNLU(object):
     request_timeout = 10.0
     _host = "127.0.0.1"
-    _port = 5000
+    _port = 8888
 
     @property
     def host(self):
@@ -36,7 +36,7 @@ class _ConfigNLU(object):
 class _ConfigDM(object):
     input_timeout = 10.0
     _host = "127.0.0.1"
-    _port = 9999
+    _port = 5000
 
     @property
     def host(self):

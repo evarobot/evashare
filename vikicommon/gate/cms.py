@@ -23,22 +23,21 @@ class CMSGate(object):
         assert(data.status_code == 200)
         return json.loads(data.text)
 
-    def event_id_to_answer(self, domain_id, event_id):
+    def response_id_to_answer(self, domain_id, response_id):
         """
 
         Parameters
         ----------
         domain_id : 项目ID
-        event_id : 事件ID
+        response_id : 事件ID
 
         """
         params = {
             'domain_id': domain_id,
-            'event_id': event_id
+            'response_id': response_id
         }
         headers = {'content-type': 'application/json'}
-        url = "http://{0}:{1}/v2/event_id_to_answer".format(self.host,
-                                                            self.port)
+        url = "http://{0}:{1}/v2/response_id_to_answer".format(self.host, self.port)
         data = requests.post(url,
                              data=json.dumps(params),
                              headers=headers,

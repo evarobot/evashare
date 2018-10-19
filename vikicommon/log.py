@@ -69,6 +69,7 @@ def init_logger(logger=None, level="INFO", path="./"):
     global initialised
     if initialised:
         return
+    return
     # channel = logging.StreamHandler()
     channel = logging.StreamHandler(make_unistream(sys.stdout))
     channel.setFormatter(LogFormatter())

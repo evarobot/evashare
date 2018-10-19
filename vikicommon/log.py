@@ -62,19 +62,16 @@ class DaemonFileLogHandler2(logging.FileHandler):
 
 
 def init_logger(logger=None, level="INFO", path="./"):
-    logging.basicConfig(filename=path+"/a.log", level=level)
-    logging.getLogger().addHandler(logging.StreamHandler())
-    return
     if not logger:
         logger = logging.getLogger()
     logger.setLevel(getattr(logging, level.upper()))
     global initialised
     if initialised:
         return
-    # channel = logging.StreamHandler()
     channel = logging.StreamHandler(sys.stdout)
     channel.setFormatter(LogFormatter())
     logger.addHandler(channel)
+    return
 
     channel = DaemonFileLogHandler(path)
     channel.setFormatter(LogFormatter())
@@ -170,12 +167,12 @@ class LogFormatter(logging.Formatter):
                     fg_color = unicode_type(fg_color)
 
                 for levelno, code in colors.items():
-                    self._colors[levelno] = unicode_type(curses.tparm(fg_color, code))
-                self._normal = unicode_type(curses.tigetstr("sgr0"))
+                    self._colors[levelno] = unicode_type(curses.tparm(fg_color, code).decode('utf8'))
+                self._normal = unicode_type(curses.tigetstr("sgr0").decode('utf8'))
             else:
                 for levelno, code in colors.items():
-                    self._colors[levelno] = '\033[2;3%dm' % code
-                self._normal = '\033[0m'
+                    self._colors[levelno] = str('\033[2;3%dm') % code
+                self._normal = str('\033[0m')
         else:
             self._normal = ''
 

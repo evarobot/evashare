@@ -62,6 +62,9 @@ class DaemonFileLogHandler2(logging.FileHandler):
 
 
 def init_logger(logger=None, level="INFO", path="./"):
+    logging.basicConfig(filename=path+"/a.log", level=level)
+    logging.getLogger().addHandler(logging.StreamHandler())
+    return
     if not logger:
         logger = logging.getLogger()
     logger.setLevel(getattr(logging, level.upper()))
@@ -95,16 +98,6 @@ def _stderr_supports_color():
         # fall back to non-colored logs than to break at startup.
         pass
     return False
-
-
-def _safe_unicode(value):
-    if isinstance(value, unicode):
-        return value
-
-    try:
-        return value.decode("utf-8")
-    except UnicodeDecodeError:
-        return repr(value)
 
 
 class ProgressConsoleHandler(logging.StreamHandler):
@@ -174,11 +167,11 @@ class LogFormatter(logging.Formatter):
                 fg_color = (curses.tigetstr("setaf") or
                             curses.tigetstr("setf") or "")
                 if (3, 0) < sys.version_info < (3, 2, 3):
-                    fg_color = unicode_type(fg_color, "ascii")
+                    fg_color = unicode_type(fg_color)
 
                 for levelno, code in colors.items():
-                    self._colors[levelno] = unicode_type(curses.tparm(fg_color, code), "ascii")
-                self._normal = unicode_type(curses.tigetstr("sgr0"), "ascii")
+                    self._colors[levelno] = unicode_type(curses.tparm(fg_color, code))
+                self._normal = unicode_type(curses.tigetstr("sgr0"))
             else:
                 for levelno, code in colors.items():
                     self._colors[levelno] = '\033[2;3%dm' % code
@@ -190,7 +183,7 @@ class LogFormatter(logging.Formatter):
         try:
             message = record.getMessage()
             assert isinstance(message, basestring_type)  # guaranteed by logging
-            record.message = _safe_unicode(message)
+            record.message = message
         except Exception as e:
             record.message = "Bad message (%r): %r" % (e, record.__dict__)
 
@@ -209,7 +202,7 @@ class LogFormatter(logging.Formatter):
                 record.exc_text = self.formatException(record.exc_info)
         if record.exc_text:
             lines = [formatted.rstrip()]
-            lines.extend(_safe_unicode(ln) for ln in record.exc_text.split('\n'))
+            lines.extend(ln for ln in record.exc_text.split('\n'))
             formatted = '\n'.join(lines)
         return formatted.replace("\n", "\n    ")
 

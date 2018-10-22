@@ -24,43 +24,6 @@ basestring_type = str
 initialised = False
 
 
-class DaemonFileLogHandler2(logging.FileHandler):
-
-    _LOG_FILEFORMAT = '%Y%m%d%H'
-
-    def __init__(self, filename, mode='a', encoding=None, delay=0):
-        super(DaemonFileLogHandler2, self).__init__(filename, mode, encoding, delay)
-
-    def get_cur_filename(self):
-        t = datetime.now()
-        newlogfile = "%s/%s.log" % (self.baseFilename, t.strftime(self._LOG_FILEFORMAT))
-        return newlogfile
-
-    def _open(self):
-        if self.encoding is None:
-            stream = open(self.get_cur_filename(), self.mode)
-        else:
-            stream = codecs.open(self.get_cur_filename(), self.mode, self.encoding)
-        return stream
-
-    def _get_stream(self):
-        if self.stream is None:
-            self.stream = self._open()
-        else:
-            cur_filename = self.get_cur_filename()
-            if cur_filename != self.stream.name:
-                self.stream = self._open()
-
-        return self.stream
-
-    def emit(self, record):
-        try:
-            self._get_stream()
-        except:
-            return
-        return logging.StreamHandler.emit(self, record)
-
-
 def init_logger(logger=None, level="INFO", path="./"):
     if not logger:
         logger = logging.getLogger()
@@ -71,7 +34,6 @@ def init_logger(logger=None, level="INFO", path="./"):
     channel = logging.StreamHandler(sys.stdout)
     channel.setFormatter(LogFormatter())
     logger.addHandler(channel)
-    return
 
     channel = DaemonFileLogHandler(path)
     channel.setFormatter(LogFormatter())
@@ -107,7 +69,7 @@ class ProgressConsoleHandler(logging.StreamHandler):
 
 class DaemonFileLogHandler(logging.FileHandler):
 
-    _LOG_FILEFORMAT = '%Y%m%d%H'
+    _LOG_FILEFORMAT = '%Y%m%d'
 
     def __init__(self, filename, mode='a', encoding=None, delay=0):
         super(DaemonFileLogHandler, self).__init__(filename, mode, encoding, delay)

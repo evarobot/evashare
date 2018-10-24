@@ -7,27 +7,28 @@ from vikicommon.util.util import generate_base_url
 
 
 logger = logging.getLogger(__name__)
+http_timeout = Config.http_timeout
 
 
 class CMSGate(object):
     """"""
-    request_timeout = 10
 
     def __init__(self, host, port, sidecar_url):
         self.base_url = generate_base_url(host, port,
                                           sidecar_url, "sidecar-vikicms")
 
-    def get_dm_biztree(self, domain_id):
+    def get_dm_biztree(self, domain_id, timeout=http_timeout):
         """ Call CMS module for tree.
 
         """
         url = self.base_url + '/v2/{}/dm'.format(domain_id)
-        data = requests.get(url, timeout=self.request_timeout)
+        data = requests.get(url, timeout=timeout)
         logger.info("GET %s %s", url, data.status_code)
         assert(data.status_code == 200)
         return json.loads(data.text)
 
-    def response_id_to_answer(self, domain_id, response_id):
+    def response_id_to_answer(self, domain_id, response_id,
+                              timeout=http_timeout):
         """
 
         Parameters
@@ -45,11 +46,11 @@ class CMSGate(object):
         data = requests.post(url,
                              data=json.dumps(params),
                              headers=headers,
-                             timeout=self.request_timeout)
+                             timeout=timeout)
         assert(data.status_code == 200)
         return json.loads(data.text)
 
-    def get_domain_by_name(self, name):
+    def get_domain_by_name(self, name, timeout=http_timeout):
         """ Call CMS module for domain id.
 
         """
@@ -61,17 +62,17 @@ class CMSGate(object):
         data = requests.post(url,
                              data=json.dumps(params),
                              headers=headers,
-                             timeout=self.request_timeout)
+                             timeout=timeout)
         assert(data.status_code == 200)
         return json.loads(data.text)
 
-    def get_filter_words(self, domain_id):
+    def get_filter_words(self, domain_id, timeout=http_timeout):
         url = self.base_url + '/v2/{}/filter_words'.format(domain_id)
-        data = requests.get(url, timeout=self.request_timeout)
+        data = requests.get(url, timeout=timeout)
         assert(data.status_code == 200)
         return json.loads(data.text)
 
-    def get_domain_slots(self, domain_id):
+    def get_domain_slots(self, domain_id, timeout=http_timeout):
         url = self.base_url + '/v2/rpc/get_domain_slots'
         headers = {'content-type': 'application/json'}
         data = requests.post(url,
@@ -79,11 +80,11 @@ class CMSGate(object):
                                  'domain_id': domain_id
                              }),
                              headers=headers,
-                             timeout=self.request_timeout)
+                             timeout=timeout)
         assert(data.status_code == 200)
         return json.loads(data.text)
 
-    def get_slot_values_for_nlu(self, slot_id):
+    def get_slot_values_for_nlu(self, slot_id, timeout=http_timeout):
         url = self.base_url + '/v2/rpc/get_slot_values_for_nlu'
         headers = {'content-type': 'application/json'}
         data = requests.post(url,
@@ -91,11 +92,11 @@ class CMSGate(object):
                                  'slot_id': slot_id
                              }),
                              headers=headers,
-                             timeout=self.request_timeout)
+                             timeout=timeout)
         assert(data.status_code == 200)
         return json.loads(data.text)
 
-    def get_tree_label_data(self, domain_id):
+    def get_tree_label_data(self, domain_id, timeout=http_timeout):
         url = self.base_url + '/v2/rpc/get_tree_label_data'
         headers = {'content-type': 'application/json'}
         data = requests.post(url,
@@ -103,11 +104,12 @@ class CMSGate(object):
                                  'domain_id': domain_id
                              }),
                              headers=headers,
-                             timeout=self.request_timeout)
+                             timeout=timeout)
         assert(data.status_code == 200)
         return json.loads(data.text)
 
-    def get_intent_slots_without_value(self, domain_id, intent_name):
+    def get_intent_slots_without_value(self, domain_id, intent_name,
+                                       timeout=http_timeout):
         url = self.base_url + '/v2/rpc/get_intent_slots_without_value'
         headers = {'content-type': 'application/json'}
         data = requests.post(url,
@@ -116,23 +118,23 @@ class CMSGate(object):
                                  'intent_name': intent_name
                              }),
                              headers=headers,
-                             timeout=self.request_timeout)
+                             timeout=timeout)
         assert(data.status_code == 200)
         return json.loads(data.text)
 
-    def get_domain_values(self, domain_id):
+    def get_domain_values(self, domain_id, timeout=http_timeout):
         url = self.base_url + '/v2/domains/{}/values'.format(domain_id)
-        data = requests.get(url, timeout=self.request_timeout)
+        data = requests.get(url, timeout=timeout)
         assert(data.status_code == 200)
         return json.loads(data.text)
 
-    def train_notify(self, data):
+    def train_notify(self, data, timeout=http_timeout):
         url = self.base_url + '/v2/rpc/robot/train_notify'
         headers = {'content-type': 'application/json'}
         ret = requests.post(url,
                             data=json.dumps(data),
                             headers=headers,
-                            timeout=self.request_timeout)
+                            timeout=timeout)
         assert(ret.status_code == 200)
         return json.loads(ret.text)
 

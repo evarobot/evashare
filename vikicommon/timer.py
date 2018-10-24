@@ -117,52 +117,52 @@ class _TimerReset(Thread):
 
 def test_timer_reset():
     def hello():
-        print "Time: %s - hello, world" % time.asctime()
+        print("Time: {0} - hello, world".format(time.asctime()))
 
     # No reset
-    print "Time: %s - start..." % time.asctime()
+    print("Time: {0} - start...".format(time.asctime()))
     tim = TimerReset("test", 5, hello)
     tim.start()
-    print "Time: %s - sleeping for 10..." % time.asctime()
+    print("Time: %s - sleeping for 10..." % time.asctime())
     time.sleep(10)
-    print "Time: %s - end..." % time.asctime()
+    print("Time: %s - end..." % time.asctime())
 
-    print "\n\n"
+    print("\n\n")
 
     # With Reset
-    print "Time: %s - start..." % time.asctime()
+    print("Time: %s - start..." % time.asctime())
     tim = TimerReset("test", 5, hello)
     tim.start()
-    print "Time: %s - sleeping for 4..." % time.asctime()
+    print("Time: %s - sleeping for 4..." % time.asctime())
     time.sleep(4)
     tim.reset()
-    print "Time: %s - sleeping for 10..." % time.asctime()
+    print("Time: %s - sleeping for 10..." % time.asctime())
     time.sleep(10)
-    print "Time: %s - end..." % time.asctime()
+    print("Time: %s - end..." % time.asctime())
 
-    print "\n\n"
+    print("\n\n")
 
     # With reset interval
-    print "Time: %s - start..." % time.asctime()
+    print("Time: %s - start..." % time.asctime())
     tim = TimerReset("test", 5, hello)
     tim.start()
-    print "Time: %s - sleeping for 4..." % time.asctime()
+    print("Time: %s - sleeping for 4..." % time.asctime())
     time.sleep(4)
     tim.reset(9)
-    print "Time: %s - sleeping for 10..." % time.asctime()
+    print("Time: %s - sleeping for 10..." % time.asctime())
     time.sleep(10)
-    print "Time: %s - end..." % time.asctime()
+    print("Time: %s - end..." % time.asctime())
 
 
 if __name__ == '__main__':
     from time import sleep
 
     def hello(name):
-        print "Hello %s!" % name
-    print "starting..."
+        print("Hello %s!" % name)
+    print("starting...")
     # rt = RepeatedTimer(1, hello, "World")
     rt = TimerThread(1, hello, "World")
     rt.start()
-    print "main thread"
+    print("main thread")
     sleep(3)
     rt.stop()

@@ -17,6 +17,22 @@ class _ConfigCMS(object):
         return port if port is not None else self._port
 
 
+class _ConfigResource(object):
+    request_timeout = 10.0
+    _host = "127.0.0.1"
+    _port = 8888
+
+    @property
+    def host(self):
+        host = os.environ.get("RESOURCE_HOST")
+        return host if host is not None else self._host
+
+    @property
+    def port(self):
+        port = os.environ.get("RESOURCE_PORT")
+        return port if port is not None else self._port
+
+
 class _ConfigNLU(object):
     request_timeout = 10.0
     _host = "127.0.0.1"
@@ -51,4 +67,5 @@ class _ConfigDM(object):
 
 ConfigNLU = _ConfigNLU()
 ConfigCMS = _ConfigCMS()
+ConfigResource = _ConfigResource()
 ConfigDM = _ConfigDM()

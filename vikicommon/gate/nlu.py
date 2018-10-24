@@ -5,15 +5,16 @@ import requests
 from vikicommon.config import ConfigNLU, Config
 from vikicommon.util.util import generate_base_url
 
+http_timeout = Config.http_timeout
+
 
 class NLUGate(object):
-    request_timeout = 5
 
     def __init__(self, host, port, sidecar_url):
         self.base_url = generate_base_url(host, port,
                                           sidecar_url, "sidecar-vikinlu")
 
-    def predict(self, domain_id, context, question):
+    def predict(self, domain_id, context, question, timeout=http_timeout):
         """
 
         Parameters
@@ -36,11 +37,11 @@ class NLUGate(object):
         data = requests.post(url,
                              data=json.dumps(params),
                              headers=headers,
-                             timeout=ConfigNLU.request_timeout)
+                             timeout=timeout)
         assert(data.status_code == 200)
         return json.loads(data.text)
 
-    def train(self, domain_id, domain_name):
+    def train(self, domain_id, domain_name, timeout=http_timeout):
         """
 
         Parameters
@@ -60,7 +61,7 @@ class NLUGate(object):
         data = requests.post(url,
                              data=json.dumps(params),
                              headers=headers,
-                             timeout=ConfigNLU.request_timeout)
+                             timeout=timeout)
         assert(data.status_code == 200)
         return json.loads(data.text)
 

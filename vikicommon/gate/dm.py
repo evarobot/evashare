@@ -12,7 +12,7 @@ class DMGate(object):
                                           sidecar_url,
                                           "sidecar-vikidm")
 
-    def process_question(self, data, timeout=3):
+    def process_question(self, data, timeout=Config.http_timeout):
         url = self.base_url + '/dm/robot/question/'
         headers = {'content-type': 'application/json'}
         ret = requests.post(url, data=json.dumps(data), headers=headers,
@@ -20,7 +20,7 @@ class DMGate(object):
         assert(ret.status_code == 200)
         return ret.text
 
-    def reset_robot(self, data, timeout=3):
+    def reset_robot(self, data, timeout=Config.http_timeout):
         url = self.base_url + '/dm/robot/reset/'
         headers = {'content-type': 'application/json'}
         ret = requests.post(url, data=json.dumps(data), headers=headers,
@@ -28,7 +28,7 @@ class DMGate(object):
         assert(ret.status_code == 200)
         return ret.text
 
-    def confirm(self, data, timeout=3):
+    def confirm(self, data, timeout=Config.http_timeout):
         url = self.base_url + '/dm/robot/confirm/'
         headers = {'content-type': 'application/json'}
         ret = requests.post(url, data=json.dumps(data), headers=headers,

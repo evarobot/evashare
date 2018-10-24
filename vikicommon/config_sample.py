@@ -1,8 +1,18 @@
 import os
 
 
+class _Config(object):
+    http_timeout = 5
+
+    _sidecar_url = ""
+
+    @property
+    def sidecar_url(self):
+        url = os.environ.get("SIDECAR_URL")
+        return url if url else self._sidecar_url
+
+
 class _ConfigCMS(object):
-    request_timeout = 10.0
     _host = "127.0.0.1"
     _port = 7777
 
@@ -18,7 +28,6 @@ class _ConfigCMS(object):
 
 
 class _ConfigResource(object):
-    request_timeout = 10.0
     _host = "127.0.0.1"
     _port = 8888
 
@@ -34,7 +43,6 @@ class _ConfigResource(object):
 
 
 class _ConfigNLU(object):
-    request_timeout = 10.0
     _host = "127.0.0.1"
     _port = 8888
 
@@ -69,3 +77,4 @@ ConfigNLU = _ConfigNLU()
 ConfigCMS = _ConfigCMS()
 ConfigResource = _ConfigResource()
 ConfigDM = _ConfigDM()
+Config = _Config()

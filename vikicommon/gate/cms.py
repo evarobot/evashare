@@ -84,12 +84,12 @@ class CMSGate(object):
         assert(data.status_code == 200)
         return json.loads(data.text)
 
-    def get_slot_values_for_nlu(self, slot_id, timeout=http_timeout):
+    def get_slot_values_for_nlu(self, domain_id, timeout=http_timeout):
         url = self.base_url + '/v2/rpc/get_slot_values_for_nlu'
         headers = {'content-type': 'application/json'}
         data = requests.post(url,
                              data=json.dumps({
-                                 'slot_id': slot_id
+                                 'domain_id': domain_id
                              }),
                              headers=headers,
                              timeout=timeout)

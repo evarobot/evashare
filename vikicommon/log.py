@@ -3,7 +3,6 @@
 import logging
 import sys
 from datetime import datetime
-from vikicommon.util.uniout import make_unistream
 
 try:
     import colorama
@@ -20,8 +19,8 @@ try:
 except ImportError:
     codecs = None
 
-unicode_type = unicode
-basestring_type = basestring
+unicode_type = str
+basestring_type = str
 initialised = False
 
 
@@ -39,14 +38,14 @@ class DaemonFileLogHandler2(logging.FileHandler):
 
     def _open(self):
         if self.encoding is None:
-            stream = make_unistream(open(self.get_cur_filename(), self.mode))
+            stream = open(self.get_cur_filename(), self.mode)
         else:
-            stream = make_unistream(codecs.open(self.get_cur_filename(), self.mode, self.encoding))
+            stream = codecs.open(self.get_cur_filename(), self.mode, self.encoding)
         return stream
 
     def _get_stream(self):
         if self.stream is None:
-            self.stream = make_unistream(self._open())
+            self.stream = self._open()
         else:
             cur_filename = self.get_cur_filename()
             if cur_filename != self.stream.name:
@@ -69,10 +68,10 @@ def init_logger(logger=None, level="INFO", path="./"):
     global initialised
     if initialised:
         return
-    # channel = logging.StreamHandler()
-    channel = logging.StreamHandler(make_unistream(sys.stdout))
+    channel = logging.StreamHandler(sys.stdout)
     channel.setFormatter(LogFormatter())
     logger.addHandler(channel)
+    return
 
     channel = DaemonFileLogHandler(path)
     channel.setFormatter(LogFormatter())
@@ -98,21 +97,10 @@ def _stderr_supports_color():
     return False
 
 
-def _safe_unicode(value):
-    if isinstance(value, unicode):
-        return value
-
-    try:
-        return value.decode("utf-8")
-    except UnicodeDecodeError:
-        return repr(value)
-
-
 class ProgressConsoleHandler(logging.StreamHandler):
     def emit(self, record):
         msg = self.format(record)
         stream = self.stream
-        stream = make_unistream(stream)
         stream.write(msg)
         #self.flush()
 
@@ -134,7 +122,6 @@ class DaemonFileLogHandler(logging.FileHandler):
             stream = open(self.get_cur_filename(), self.mode)
         else:
             stream = codecs.open(self.get_cur_filename(), self.mode, self.encoding)
-        stream = make_unistream(stream)
         return stream
 
     def _get_stream(self):
@@ -177,15 +164,15 @@ class LogFormatter(logging.Formatter):
                 fg_color = (curses.tigetstr("setaf") or
                             curses.tigetstr("setf") or "")
                 if (3, 0) < sys.version_info < (3, 2, 3):
-                    fg_color = unicode_type(fg_color, "ascii")
+                    fg_color = unicode_type(fg_color)
 
                 for levelno, code in colors.items():
-                    self._colors[levelno] = unicode_type(curses.tparm(fg_color, code), "ascii")
-                self._normal = unicode_type(curses.tigetstr("sgr0"), "ascii")
+                    self._colors[levelno] = unicode_type(curses.tparm(fg_color, code).decode('utf8'))
+                self._normal = unicode_type(curses.tigetstr("sgr0").decode('utf8'))
             else:
                 for levelno, code in colors.items():
-                    self._colors[levelno] = '\033[2;3%dm' % code
-                self._normal = '\033[0m'
+                    self._colors[levelno] = str('\033[2;3%dm') % code
+                self._normal = str('\033[0m')
         else:
             self._normal = ''
 
@@ -193,7 +180,7 @@ class LogFormatter(logging.Formatter):
         try:
             message = record.getMessage()
             assert isinstance(message, basestring_type)  # guaranteed by logging
-            record.message = _safe_unicode(message)
+            record.message = message
         except Exception as e:
             record.message = "Bad message (%r): %r" % (e, record.__dict__)
 
@@ -212,7 +199,7 @@ class LogFormatter(logging.Formatter):
                 record.exc_text = self.formatException(record.exc_info)
         if record.exc_text:
             lines = [formatted.rstrip()]
-            lines.extend(_safe_unicode(ln) for ln in record.exc_text.split('\n'))
+            lines.extend(ln for ln in record.exc_text.split('\n'))
             formatted = '\n'.join(lines)
         return formatted.replace("\n", "\n    ")
 

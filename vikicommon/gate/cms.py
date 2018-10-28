@@ -1,16 +1,21 @@
 # coding=utf-8
 import json
 import requests
-from vikicommon.config import ConfigCMS
+import logging
+from vikicommon.config import ConfigCMS, Config
 from vikicommon.util.util import generate_base_url
+
+
+logger = logging.getLogger(__name__)
 
 
 class CMSGate(object):
     """"""
     request_timeout = 10
 
-    def __init__(self, host, port, url):
-        self.base_url = generate_base_url(host, port, url)
+    def __init__(self, host, port, sidecar_url):
+        self.base_url = generate_base_url(host, port,
+                                          sidecar_url, "sidecar-vikicms")
 
     def get_dm_biztree(self, domain_id):
         """ Call CMS module for tree.
@@ -18,24 +23,25 @@ class CMSGate(object):
         """
         url = self.base_url + '/v2/{}/dm'.format(domain_id)
         data = requests.get(url, timeout=self.request_timeout)
+        logger.info("GET %s %s", url, data.status_code)
         assert(data.status_code == 200)
         return json.loads(data.text)
 
-    def event_id_to_answer(self, domain_id, event_id):
+    def response_id_to_answer(self, domain_id, response_id):
         """
 
         Parameters
         ----------
         domain_id : 项目ID
-        event_id : 事件ID
+        response_id : 事件ID
 
         """
         params = {
             'domain_id': domain_id,
-            'event_id': event_id
+            'response_id': response_id
         }
         headers = {'content-type': 'application/json'}
-        url = self.base_url + '/v2/event_id_to_answer'
+        url = self.base_url + '/v2/response_id_to_answer'
         data = requests.post(url,
                              data=json.dumps(params),
                              headers=headers,
@@ -130,5 +136,36 @@ class CMSGate(object):
         assert(ret.status_code == 200)
         return json.loads(ret.text)
 
+    def send_manual_question(self, data):
+        url = self.base_url + '/v2/manual_question'
+        headers = {'content-type': 'application/json'}
+        ret = requests.post(url,
+                            json=data,
+                            headers=headers,
+                            timeout=self.request_timeout)
+        assert (ret.status_code == 200)
+        return json.loads(ret.text)
 
-cms_gate = CMSGate(ConfigCMS.host, ConfigCMS.port, ConfigCMS.base_url)
+    def check_human_agent_status(self, user_name):
+        url = self.base_url + '/v2/human_agent_status/{}'.format(user_name)
+        try:
+            ret = requests.get(url, timeout=self.request_timeout)
+        except Exception as e:
+            logger.warning("remote api {} has an error: {}".format(url, e))
+            return False
+        return json.loads(ret.text)['data']
+
+    def response_to_client(self, data):
+        url = self.base_url + '/v2/dialog_question'
+        headers = {'content-type': 'application/json'}
+        try:
+            ret = requests.post(url,
+                                json=data,
+                                headers=headers,
+                                timeout=self.request_timeout)
+        except Exception as e:
+            logger.warning("remote api {} has an error: {}".format(url, e))
+            return False
+        return json.loads(ret.text)['data']
+
+cms_gate = CMSGate(ConfigCMS.host, ConfigCMS.port, Config.sidecar_url)

@@ -2,11 +2,12 @@
 # encoding: utf-8
 
 import time
+import datetime
 import hashlib
 import re
 import collections
 import os
-from langconv import Converter
+from vikicommon.util.langconv import Converter
 
 PROJECT_DIR = os.path.realpath(os.path.join(
     os.path.dirname(os.path.realpath(__file__)), '../../'))
@@ -154,7 +155,7 @@ dict ={u'零': 0, u'一': 1, u'二': 2, u'俩': 2, u'两': 2, u'三': 3, u'四':
 
 
 def cn2digit(a, encoding="utf-8"):
-    m = re.search(ur"(\d)*", a)
+    m = re.search(r"(\d)*", a)
     if m and m.group() == a:
         return a
     if isinstance(a, str):
@@ -193,10 +194,17 @@ def cn2digit(a, encoding="utf-8"):
     result = result + Billion
     return result
 
-def generate_base_url(host, port, url=None):
-    return 'http://{}:{}'.format(str(host), str(port)) if not url else url
+
+def generate_base_url(host, port, sidecar_url, service_id):
+    if sidecar_url:
+        return "{}/{}".format(sidecar_url, service_id)
+    return 'http://{}:{}'.format(str(host), str(port))
+
+
+def time_now():
+    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
 if __name__ == '__main__':
-    print cn2digit("一千三百")
-    print cn2digit("零点三")  # 不支持
+    print(cn2digit("一千三百"))
+    print(cn2digit("零点三"))  # 不支持

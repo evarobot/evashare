@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 import time
+import datetime
 import hashlib
 import re
 import collections
@@ -198,6 +199,10 @@ def generate_base_url(host, port, sidecar_url, service_id):
     if sidecar_url:
         return "{}/{}".format(sidecar_url, service_id)
     return 'http://{}:{}'.format(str(host), str(port))
+
+
+def time_now():
+    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
 if __name__ == '__main__':

@@ -136,5 +136,36 @@ class CMSGate(object):
         assert(ret.status_code == 200)
         return json.loads(ret.text)
 
+    def send_manual_question(self, data):
+        url = self.base_url + '/v2/manual_question'
+        headers = {'content-type': 'application/json'}
+        ret = requests.post(url,
+                            json=data,
+                            headers=headers,
+                            timeout=self.request_timeout)
+        assert (ret.status_code == 200)
+        return json.loads(ret.text)
+
+    def check_human_agent_status(self, user_name):
+        url = self.base_url + '/v2/human_agent_status/{}'.format(user_name)
+        try:
+            ret = requests.get(url, timeout=self.request_timeout)
+        except Exception as e:
+            logger.warning("remote api {} has an error: {}".format(url, e))
+            return False
+        return json.loads(ret.text)['data']
+
+    def response_to_client(self, data):
+        url = self.base_url + '/v2/dialog_question'
+        headers = {'content-type': 'application/json'}
+        try:
+            ret = requests.post(url,
+                                json=data,
+                                headers=headers,
+                                timeout=self.request_timeout)
+        except Exception as e:
+            logger.warning("remote api {} has an error: {}".format(url, e))
+            return False
+        return json.loads(ret.text)['data']
 
 cms_gate = CMSGate(ConfigCMS.host, ConfigCMS.port, Config.sidecar_url)

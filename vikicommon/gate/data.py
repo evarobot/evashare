@@ -29,7 +29,7 @@ class DataGate(object):
         }
         try:
             ret = requests.get(url, params=payload,
-                               timeout=self.request_timeout)
+                               timeout=0.5)
         except Exception as e:
             log.warning(
                 "get session history has an error: {} remote api {}".format(e,
@@ -65,7 +65,7 @@ class DataGate(object):
             ret = requests.post(url,
                                 json=params,
                                 headers=headers,
-                                timeout=self.request_timeout)
+                                timeout=0.5)
         except Exception as e:
             log.warning("save session has an error: {} - api {} ".format(e, url))
             return False
@@ -80,11 +80,12 @@ class DataGate(object):
     def is_session_complete(self, sid):
         url = self.base_url + '/v2/questions/{}'.format(sid)
         try:
-            ret = requests.get(url, timeout=self.request_timeout)
+            ret = requests.get(url, timeout=0.5)
         except Exception as e:
             log.warning("remote api {} has an error: {}".format(url, e))
             #  服务出错，认为问题已经被回答
-            return True
+            # return True
+            return False
         return json.loads(ret.text)['data']
 
 

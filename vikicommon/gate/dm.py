@@ -13,8 +13,13 @@ class DMGate(object):
                                           "sidecar-vikidm")
 
     def process_question(self, data, timeout=Config.http_timeout):
-        url = self.base_url + '/dm/robot/question/'
-        headers = {'content-type': 'application/json'}
+        url = self.base_url + '/v3/dm/robot/question/'
+        headers = {
+            'content-type': 'application/json',
+            'uniqueId': data['sid'],
+            'sn': data['robot_id'],
+            'product': data['project']
+        }
         ret = requests.post(url, data=json.dumps(data), headers=headers,
                             timeout=timeout)
         assert(ret.status_code == 200)

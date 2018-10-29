@@ -83,8 +83,7 @@ class DataGate(object):
             ret = requests.get(url, timeout=0.5)
         except Exception as e:
             log.warning("remote api {} has an error: {}".format(url, e))
-            #  服务出错，认为问题已经被回答
-            return True
+            return False
         return json.loads(ret.text)['data']
 
 

@@ -84,12 +84,12 @@ class CMSGate(object):
         assert(data.status_code == 200)
         return json.loads(data.text)
 
-    def get_slot_values_for_nlu(self, slot_id, timeout=http_timeout):
+    def get_slot_values_for_nlu(self, domain_id, timeout=http_timeout):
         url = self.base_url + '/v2/rpc/get_slot_values_for_nlu'
         headers = {'content-type': 'application/json'}
         data = requests.post(url,
                              data=json.dumps({
-                                 'slot_id': slot_id
+                                 'domain_id': domain_id
                              }),
                              headers=headers,
                              timeout=timeout)
@@ -138,5 +138,36 @@ class CMSGate(object):
         assert(ret.status_code == 200)
         return json.loads(ret.text)
 
+    def send_manual_question(self, data, timeout=http_timeout):
+        url = self.base_url + '/v2/manual_question'
+        headers = {'content-type': 'application/json'}
+        ret = requests.post(url,
+                            json=data,
+                            headers=headers,
+                            timeout=timeout)
+        assert (ret.status_code == 200)
+        return json.loads(ret.text)
+
+    def check_human_agent_status(self, user_name, timeout=http_timeout):
+        url = self.base_url + '/v2/human_agent_status/{}'.format(user_name)
+        try:
+            ret = requests.get(url, timeout=timeout)
+        except Exception as e:
+            logger.warning("remote api {} has an error: {}".format(url, e))
+            return False
+        return json.loads(ret.text)['data']
+
+    def response_to_client(self, data, timeout=http_timeout):
+        url = self.base_url + '/v2/dialog_question'
+        headers = {'content-type': 'application/json'}
+        try:
+            ret = requests.post(url,
+                                json=data,
+                                headers=headers,
+                                timeout=timeout)
+        except Exception as e:
+            logger.warning("remote api {} has an error: {}".format(url, e))
+            return False
+        return json.loads(ret.text)['data']
 
 cms_gate = CMSGate(ConfigCMS.host, ConfigCMS.port, Config.sidecar_url)

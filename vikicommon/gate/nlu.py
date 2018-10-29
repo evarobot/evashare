@@ -33,7 +33,7 @@ class NLUGate(object):
             'question': question
         }
         headers = {'content-type': 'application/json'}
-        url = self.base_url + '/v2/nlu/{}/predict'.format(domain_id)
+        url = self.base_url + '/v2/nlu/{0}/predict'.format(domain_id)
         data = requests.post(url,
                              data=json.dumps(params),
                              headers=headers,

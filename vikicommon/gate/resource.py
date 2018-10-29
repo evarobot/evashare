@@ -2,7 +2,7 @@
 
 import json
 import requests
-from vikicommon.config import Config
+from vikicommon.config import Config, ConfigResource
 from vikicommon.util.util import generate_base_url
 
 
@@ -14,14 +14,19 @@ class ResourceGate(object):
 
     def get_slots(self, domain_name, version, timeout=Config.http_timeout):
         params = {
-            'project': domain_name,
+            'product': domain_name,
             'version': version
         }
         headers = {'content-type': 'application/json'}
-        url = self.base_url + '/v2/nlu/{}/predict'.format(domain_name)
+        url = self.base_url + '/resource/v1/metadata'
         data = requests.post(url,
                              data=json.dumps(params),
                              headers=headers,
                              timeout=timeout)
         assert(data.status_code == 200)
         return json.loads(data.text)
+
+
+resource_gate = ResourceGate(ConfigResource.host,
+                             ConfigResource.port,
+                             Config.sidecar_url)

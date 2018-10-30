@@ -28,7 +28,7 @@ class _ConfigResource(object):
 
 class _ConfigCMS(object):
     _host = "127.0.0.1"
-    _port = 5000
+    _port = 8888
     _base_url = ''
 
     @property
@@ -49,7 +49,7 @@ class _ConfigCMS(object):
 
 class _ConfigNLU(object):
     _host = "127.0.0.1"
-    _port = 8888
+    _port = 5000
     _base_url = ''
 
     @property
@@ -71,7 +71,7 @@ class _ConfigNLU(object):
 class _ConfigDM(object):
     input_timeout = 10.0
     _host = "127.0.0.1"
-    _port = 7777
+    _port = 9999
     _base_url = ''
 
     @property

@@ -13,12 +13,17 @@ class ResourceGate(object):
                                           sidecar_url, "sidecar-resource")
 
     def get_slots(self, domain_name, version, timeout=Config.http_timeout):
+        return {
+            "ret_code": "0000",
+            "ret_msg": "sucess",
+            "result": {}
+        }
         params = {
             'product': domain_name,
             'version': version
         }
         headers = {'content-type': 'application/json'}
-        url = self.base_url + '/resource/v1/metadata'
+        url = self.base_url + '/resource/nlu/v1/metadata'
         data = requests.post(url,
                              data=json.dumps(params),
                              headers=headers,

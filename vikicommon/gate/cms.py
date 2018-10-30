@@ -96,6 +96,18 @@ class CMSGate(object):
         assert(data.status_code == 200)
         return json.loads(data.text)
 
+    def get_all_intent_slots(self, domain_id, timeout=http_timeout):
+        url = self.base_url + '/v2/rpc/get_all_intent_slots'
+        headers = {'content-type': 'application/json'}
+        data = requests.post(url,
+                             data=json.dumps({
+                                 'domain_id': domain_id
+                             }),
+                             headers=headers,
+                             timeout=timeout)
+        assert(data.status_code == 200)
+        return json.loads(data.text)
+
     def get_tree_label_data(self, domain_id, timeout=http_timeout):
         url = self.base_url + '/v2/rpc/get_tree_label_data'
         headers = {'content-type': 'application/json'}

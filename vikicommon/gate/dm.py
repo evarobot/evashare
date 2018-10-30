@@ -16,7 +16,7 @@ class DMGate(object):
         url = self.base_url + '/v3/dm/robot/question/'
         headers = {
             'content-type': 'application/json',
-            'uniqueId': data['sid'],
+            'uniqueId': str(data['sid']),
             'sn': data['robot_id'],
             'product': data['project']
         }

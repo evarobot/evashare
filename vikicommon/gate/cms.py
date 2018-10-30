@@ -170,7 +170,7 @@ class CMSGate(object):
         return json.loads(ret.text)['data']
 
     def response_to_client(self, data, timeout=http_timeout):
-        url = self.base_url + '/v2/dialog_question'
+        url = 'http://127.0.0.1:{}'.format(ConfigCMS.port) + '/v2/dialog_question'
         headers = {'content-type': 'application/json'}
         try:
             ret = requests.post(url,

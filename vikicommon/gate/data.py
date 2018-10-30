@@ -3,7 +3,7 @@ import json
 import requests
 import logging
 
-from vikicommon.config import ConfigData
+from vikicommon.config import ConfigData, Config
 from vikicommon.util.util import generate_base_url
 
 log = logging.getLogger(__name__)
@@ -16,7 +16,7 @@ class DataGate(object):
     def __init__(self, host, port, sidecar_url):
         self.base_url = generate_base_url(host, port,
                                           sidecar_url,
-                                          "sidecar-vikidm")
+                                          "sidecar-vikidata")
 
     def session_history(self, domain_id, robot_id):
         """ Call DATA module for tree.
@@ -29,7 +29,7 @@ class DataGate(object):
         }
         try:
             ret = requests.get(url, params=payload,
-                               timeout=0.5)
+                               timeout=3)
         except Exception as e:
             log.warning(
                 "get session history has an error: {} remote api {}".format(e,
@@ -59,13 +59,13 @@ class DataGate(object):
         sid: 会话id
         """
         headers = {'content-type': 'application/json'}
-        url = self.base_url + '/v2/questions'
+        url = self.base_url + '/v2/sessions'
         log.info('save session: {}'.format(params))
         try:
             ret = requests.post(url,
                                 json=params,
                                 headers=headers,
-                                timeout=0.5)
+                                timeout=3)
         except Exception as e:
             log.warning("save session has an error: {} - api {} ".format(e, url))
             return False
@@ -80,13 +80,13 @@ class DataGate(object):
     def is_session_complete(self, sid):
         url = self.base_url + '/v2/questions/{}'.format(sid)
         try:
-            ret = requests.get(url, timeout=0.5)
+            ret = requests.get(url, timeout=3)
         except Exception as e:
             log.warning("remote api {} has an error: {}".format(url, e))
-            #  服务出错，认为问题已经被回答
-            # return True
             return False
         return json.loads(ret.text)['data']
 
 
-data_gate = DataGate(ConfigData.host, ConfigData.port, ConfigData.base_url)
+data_gate = DataGate(ConfigData.host,
+                     ConfigData.port,
+                     Config.sidecar_url)

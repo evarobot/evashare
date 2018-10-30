@@ -91,7 +91,7 @@ class _ConfigDM(object):
 
 class _ConfigData(object):
 
-    _host = "10.32.164.102"
+    _host = "10.32.164.74"
     _port = 8887
     _base_url = ''
 

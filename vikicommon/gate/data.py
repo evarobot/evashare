@@ -16,7 +16,7 @@ class DataGate(object):
     def __init__(self, host, port, sidecar_url):
         self.base_url = generate_base_url(host, port,
                                           sidecar_url,
-                                          "sidecar-vikidm")
+                                          "sidecar-vikidata")
 
     def session_history(self, domain_id, robot_id):
         """ Call DATA module for tree.

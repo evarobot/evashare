@@ -89,5 +89,4 @@ class DataGate(object):
 
 data_gate = DataGate(ConfigData.host,
                      ConfigData.port,
-                     ConfigData.base_url,
                      Config.sidecar_url)

@@ -29,17 +29,17 @@ class DataGate(object):
         }
         try:
             ret = requests.get(url, params=payload,
-                               timeout=3)
+                               timeout=1)
         except Exception as e:
             log.warning(
                 "get session history has an error: {} remote api {}".format(e,
                                                                             url))
             return []
         data = json.loads(ret.text)
-        if data['code'] == -1:
+        if ret.status_code !=200 or data.get('code') != -1:
             log.warning(
                 "get session history has an error: {} remote api {}".format(
-                    data['message'], url))
+                    data.get('message'), url))
             return []
         return data['data']
 
@@ -65,14 +65,14 @@ class DataGate(object):
             ret = requests.post(url,
                                 json=params,
                                 headers=headers,
-                                timeout=3)
+                                timeout=1)
         except Exception as e:
             log.warning("save session has an error: {} - api {} ".format(e, url))
             return False
         data = json.loads(ret.text)
-        if data['code'] == -1:
+        if ret.status_code !=200 or data.get('code') != -1:
             log.warning(
-                "save session has an error: {} - api {} ".format(data['message'], url))
+                "save session has an error: {} - api {} ".format(data.get('message'), url))
             return False
         log.info('save session success')
         return True
@@ -80,11 +80,17 @@ class DataGate(object):
     def is_session_complete(self, sid):
         url = self.base_url + '/v2/questions/{}'.format(sid)
         try:
-            ret = requests.get(url, timeout=3)
+            ret = requests.get(url, timeout=1)
         except Exception as e:
             log.warning("remote api {} has an error: {}".format(url, e))
             return False
-        return json.loads(ret.text)['data']
+        data = json.loads(ret.text)
+        if ret.status_code !=200 or data.get('code') != -1:
+            log.warning(
+                "save session has an error: {} - api {} ".format(
+                    data.get('message'), url))
+            return False
+        return data['data']
 
 
 data_gate = DataGate(ConfigData.host,

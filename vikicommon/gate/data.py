@@ -3,7 +3,7 @@ import json
 import requests
 import logging
 
-from vikicommon.config import ConfigData
+from vikicommon.config import ConfigData, Config
 from vikicommon.util.util import generate_base_url
 
 log = logging.getLogger(__name__)
@@ -87,4 +87,7 @@ class DataGate(object):
         return json.loads(ret.text)['data']
 
 
-data_gate = DataGate(ConfigData.host, ConfigData.port, ConfigData.base_url)
+data_gate = DataGate(ConfigData.host,
+                     ConfigData.port,
+                     ConfigData.base_url,
+                     Config.sidecar_url)

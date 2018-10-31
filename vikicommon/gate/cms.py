@@ -161,7 +161,7 @@ class CMSGate(object):
         return json.loads(ret.text)
 
     def check_human_agent_status(self, user_name, timeout=http_timeout):
-        url = self.base_url + '/v2/human_agent_status/{}'.format(user_name)
+        url = 'http://127.0.0.1:{}'.format(ConfigCMS.port) + '/v2/human_agent_status/{}'.format(user_name)
         try:
             ret = requests.get(url, timeout=timeout)
         except Exception as e:

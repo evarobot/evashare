@@ -169,6 +169,19 @@ class CMSGate(object):
         return json.loads(ret.text)['data']
 
     def response_to_client(self, data, timeout=http_timeout):
+        url = self.base_url + '/v2/dialog_question'
+        headers = {'content-type': 'application/json'}
+        try:
+            ret = requests.post(url,
+                                json=data,
+                                headers=headers,
+                                timeout=timeout)
+        except Exception as e:
+            logger.warning("remote api {} has an error: {}".format(url, e))
+            return False
+        return json.loads(ret.text)['data']
+
+    def response_to_client_cms_self(self, data, timeout=http_timeout):
         url = 'http://127.0.0.1:{}'.format(
             ConfigCMS.port) + '/v2/dialog_question'
         headers = {'content-type': 'application/json'}

@@ -36,7 +36,7 @@ class DataGate(object):
                                                                             url))
             return []
         data = json.loads(ret.text)
-        if ret.status_code !=200 or data.get('code') != -1:
+        if ret.status_code !=200 or data.get('code') != 0:
             log.warning(
                 "get session history has an error: {} remote api {}".format(
                     data.get('message'), url))
@@ -70,7 +70,7 @@ class DataGate(object):
             log.warning("save session has an error: {} - api {} ".format(e, url))
             return False
         data = json.loads(ret.text)
-        if ret.status_code !=200 or data.get('code') != -1:
+        if ret.status_code !=200 or data.get('code') != 0:
             log.warning(
                 "save session has an error: {} - api {} ".format(data.get('message'), url))
             return False
@@ -85,7 +85,7 @@ class DataGate(object):
             log.warning("remote api {} has an error: {}".format(url, e))
             return False
         data = json.loads(ret.text)
-        if ret.status_code !=200 or data.get('code') != -1:
+        if ret.status_code !=200 or data.get('code') != 0:
             log.warning(
                 "save session has an error: {} - api {} ".format(
                     data.get('message'), url))

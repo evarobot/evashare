@@ -5,7 +5,6 @@ import logging
 from vikicommon.config import ConfigCMS, Config
 from vikicommon.util.util import generate_base_url
 
-
 logger = logging.getLogger(__name__)
 http_timeout = Config.http_timeout
 
@@ -24,7 +23,7 @@ class CMSGate(object):
         url = self.base_url + '/v2/{}/dm'.format(domain_id)
         data = requests.get(url, timeout=timeout)
         logger.info("GET %s %s", url, data.status_code)
-        assert(data.status_code == 200)
+        assert (data.status_code == 200)
         return json.loads(data.text)
 
     def response_id_to_answer(self, domain_id, response_id,
@@ -47,7 +46,7 @@ class CMSGate(object):
                              data=json.dumps(params),
                              headers=headers,
                              timeout=timeout)
-        assert(data.status_code == 200)
+        assert (data.status_code == 200)
         return json.loads(data.text)
 
     def get_domain_by_name(self, name, timeout=http_timeout):
@@ -63,13 +62,13 @@ class CMSGate(object):
                              data=json.dumps(params),
                              headers=headers,
                              timeout=timeout)
-        assert(data.status_code == 200)
+        assert (data.status_code == 200)
         return json.loads(data.text)
 
     def get_filter_words(self, domain_id, timeout=http_timeout):
         url = self.base_url + '/v2/{}/filter_words'.format(domain_id)
         data = requests.get(url, timeout=timeout)
-        assert(data.status_code == 200)
+        assert (data.status_code == 200)
         return json.loads(data.text)
 
     def get_domain_slots(self, domain_id, timeout=http_timeout):
@@ -81,7 +80,7 @@ class CMSGate(object):
                              }),
                              headers=headers,
                              timeout=timeout)
-        assert(data.status_code == 200)
+        assert (data.status_code == 200)
         return json.loads(data.text)
 
     def get_slot_values_for_nlu(self, domain_id, timeout=http_timeout):
@@ -93,7 +92,7 @@ class CMSGate(object):
                              }),
                              headers=headers,
                              timeout=timeout)
-        assert(data.status_code == 200)
+        assert (data.status_code == 200)
         return json.loads(data.text)
 
     def get_all_intent_slots(self, domain_id, timeout=http_timeout):
@@ -105,7 +104,7 @@ class CMSGate(object):
                              }),
                              headers=headers,
                              timeout=timeout)
-        assert(data.status_code == 200)
+        assert (data.status_code == 200)
         return json.loads(data.text)
 
     def get_tree_label_data(self, domain_id, timeout=http_timeout):
@@ -117,7 +116,7 @@ class CMSGate(object):
                              }),
                              headers=headers,
                              timeout=timeout)
-        assert(data.status_code == 200)
+        assert (data.status_code == 200)
         return json.loads(data.text)
 
     def get_intent_slots_without_value(self, domain_id, intent_name,
@@ -131,13 +130,13 @@ class CMSGate(object):
                              }),
                              headers=headers,
                              timeout=timeout)
-        assert(data.status_code == 200)
+        assert (data.status_code == 200)
         return json.loads(data.text)
 
     def get_domain_values(self, domain_id, timeout=http_timeout):
         url = self.base_url + '/v2/domains/{}/values'.format(domain_id)
         data = requests.get(url, timeout=timeout)
-        assert(data.status_code == 200)
+        assert (data.status_code == 200)
         return json.loads(data.text)
 
     def train_notify(self, data, timeout=http_timeout):
@@ -147,7 +146,7 @@ class CMSGate(object):
                             data=json.dumps(data),
                             headers=headers,
                             timeout=timeout)
-        assert(ret.status_code == 200)
+        assert (ret.status_code == 200)
         return json.loads(ret.text)
 
     def send_manual_question(self, data, timeout=http_timeout):
@@ -161,7 +160,7 @@ class CMSGate(object):
         return json.loads(ret.text)
 
     def check_human_agent_status(self, user_name, timeout=http_timeout):
-        url = 'http://127.0.0.1:{}'.format(ConfigCMS.port) + '/v2/human_agent_status/{}'.format(user_name)
+        url = self.base_url + '/v2/human_agent_status/{}'.format(user_name)
         try:
             ret = requests.get(url, timeout=timeout)
         except Exception as e:
@@ -170,7 +169,8 @@ class CMSGate(object):
         return json.loads(ret.text)['data']
 
     def response_to_client(self, data, timeout=http_timeout):
-        url = self.base_url + '/v2/dialog_question'
+        url = 'http://127.0.0.1:{}'.format(
+            ConfigCMS.port) + '/v2/dialog_question'
         headers = {'content-type': 'application/json'}
         try:
             ret = requests.post(url,
@@ -181,5 +181,6 @@ class CMSGate(object):
             logger.warning("remote api {} has an error: {}".format(url, e))
             return False
         return json.loads(ret.text)['data']
+
 
 cms_gate = CMSGate(ConfigCMS.host, ConfigCMS.port, Config.sidecar_url)

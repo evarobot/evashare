@@ -3,8 +3,8 @@ import json
 import requests
 import logging
 
-from vikicommon.config import ConfigData, Config
-from vikicommon.util.util import generate_base_url
+from evashare.config import ConfigData, Config
+from evashare.util.util import generate_base_url
 
 log = logging.getLogger(__name__)
 

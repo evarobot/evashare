@@ -2,8 +2,8 @@
 
 import json
 import requests
-from vikicommon.config import Config, ConfigResource
-from vikicommon.util.util import generate_base_url
+from evashare.config import Config, ConfigResource
+from evashare.util.util import generate_base_url
 
 
 class ResourceGate(object):

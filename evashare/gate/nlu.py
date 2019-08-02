@@ -2,8 +2,8 @@
 
 import json
 import requests
-from vikicommon.config import ConfigNLU, Config
-from vikicommon.util.util import generate_base_url
+from evashare.config import ConfigNLU, Config
+from evashare.util.util import generate_base_url
 
 http_timeout = Config.http_timeout
 

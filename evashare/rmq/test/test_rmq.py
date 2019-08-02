@@ -4,7 +4,7 @@
 import time
 
 from multiprocessing import Process
-from vikicommon.rmq import Receiver, Publisher
+from evashare.rmq import Receiver, Publisher
 
 amqp_url = 'amqp://chi1st.xyz:5672?connection_attempts=3&heartbeat_interval=3600'
 exchange_type = 'x-delayed-message'

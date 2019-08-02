@@ -133,7 +133,7 @@ class LogFormatter(logging.Formatter):
                 self._normal = unicode_type(curses.tigetstr("sgr0").decode('utf8'))
             else:
                 for levelno, code in colors.items():
-                    self._colors[levelno] = str('\033[2;3%dm') % code
+                    self._colors[levelno] = str('\033[2;3%evadm') % code
                 self._normal = str('\033[0m')
         else:
             self._normal = ''

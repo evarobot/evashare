@@ -1,13 +1,17 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+import logging
 import time
 import datetime
 import hashlib
 import re
 import collections
 import os
-from vikicommon.util.langconv import Converter
+import difflib
+from copy import deepcopy
+from evashare.util.langconv import Converter
+log = logging.getLogger(__name__)
 
 PROJECT_DIR = os.path.realpath(os.path.join(
     os.path.dirname(os.path.realpath(__file__)), '../../'))
@@ -27,6 +31,40 @@ def singleton(cls):
             _instance[cls] = cls(*args, **kwargs)
         return _instance[cls]
     return _wrapper
+
+
+def same_dict(source, target, *exclueded_fileds):
+    """
+
+    Parameters
+    ----------
+    source : dict
+    target : dict
+    exclueded_fileds : tuple of string
+        filelds not to comapre
+
+    """
+    source = deepcopy(source)
+    target = deepcopy(target)
+    def make_dict_comparable(data, *exclueded_fileds):
+        if isinstance(data, dict):
+            for p in exclueded_fileds:
+                if p in data:
+                    data.pop(p)
+            return sorted((k, make_dict_comparable(v, *exclueded_fileds)) for k, v in list(data.items()))
+        if isinstance(data, list):
+            return sorted(make_dict_comparable(x, *exclueded_fileds) for x in data)
+        else:
+            return data
+    target = str(make_dict_comparable(target, *exclueded_fileds))
+    source = str(make_dict_comparable(source, *exclueded_fileds))
+    for i, s in enumerate(difflib.ndiff(target, source)):
+        if s[0] in ['-', '+']:
+            log.info("\n%i" % i)
+            log.info(source[i:])
+            log.info(target[i:])
+            return False
+    return True
 
 
 # 计算函数执行时间的花费
@@ -151,10 +189,10 @@ def pinyin_of_chinese(words):
     return alternative_pinyins
 
 
-dict ={u'零': 0, u'一': 1, u'二': 2, u'俩': 2, u'两': 2, u'三': 3, u'四': 4, u'五': 5, u'六': 6, u' 七': 7, u'八': 8, u'九': 9, u'十': 10, u'百': 100, u'千': 1000, u'万': 10000, u'０': 0, u'１ ': 1, u'２': 2, u'３': 3, u'４': 4, u'５': 5, u'６': 6, u'７': 7, u'８': 8, u'９': 9, u'壹': 1, u'贰': 2, u'叁': 3, u'肆': 4, u'伍': 5, u'陆': 6, u'柒': 7, u'捌': 8, u'玖': 9, u'拾': 10, u'佰': 100, u'仟': 1000, u'萬': 10000, u'亿': 100000000}
 
 
 def cn2digit(a, encoding="utf-8"):
+    dict ={u'零': 0, u'一': 1, u'二': 2, u'俩': 2, u'两': 2, u'三': 3, u'四': 4, u'五': 5, u'六': 6, u' 七': 7, u'八': 8, u'九': 9, u'十': 10, u'百': 100, u'千': 1000, u'万': 10000, u'０': 0, u'１ ': 1, u'２': 2, u'３': 3, u'４': 4, u'５': 5, u'６': 6, u'７': 7, u'８': 8, u'９': 9, u'壹': 1, u'贰': 2, u'叁': 3, u'肆': 4, u'伍': 5, u'陆': 6, u'柒': 7, u'捌': 8, u'玖': 9, u'拾': 10, u'佰': 100, u'仟': 1000, u'萬': 10000, u'亿': 100000000}
     m = re.search(r"(\d)*", a)
     if m and m.group() == a:
         return a

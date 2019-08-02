@@ -2,8 +2,8 @@
 import json
 import requests
 import logging
-from vikicommon.config import ConfigCMS, Config
-from vikicommon.util.util import generate_base_url
+from evashare.config import ConfigCMS, Config
+from evashare.util.util import generate_base_url
 
 logger = logging.getLogger(__name__)
 http_timeout = Config.http_timeout
@@ -20,7 +20,7 @@ class CMSGate(object):
         """ Call CMS module for tree.
 
         """
-        url = self.base_url + '/v2/{}/dm'.format(domain_id)
+        url = self.base_url + '/v2/{}/evadm'.format(domain_id)
         data = requests.get(url, timeout=timeout)
         logger.info("GET %s %s", url, data.status_code)
         assert (data.status_code == 200)
@@ -71,8 +71,8 @@ class CMSGate(object):
         assert (data.status_code == 200)
         return json.loads(data.text)
 
-    def get_domain_slots(self, domain_id, timeout=http_timeout):
-        url = self.base_url + '/v2/rpc/get_domain_slots'
+    def get_domain_entities(self, domain_id, timeout=http_timeout):
+        url = self.base_url + '/v2/rpc/get_domain_entities'
         headers = {'content-type': 'application/json'}
         data = requests.post(url,
                              data=json.dumps({
@@ -83,20 +83,8 @@ class CMSGate(object):
         assert (data.status_code == 200)
         return json.loads(data.text)
 
-    def get_slot_values_for_nlu(self, domain_id, timeout=http_timeout):
-        url = self.base_url + '/v2/rpc/get_slot_values_for_nlu'
-        headers = {'content-type': 'application/json'}
-        data = requests.post(url,
-                             data=json.dumps({
-                                 'domain_id': domain_id
-                             }),
-                             headers=headers,
-                             timeout=timeout)
-        assert (data.status_code == 200)
-        return json.loads(data.text)
-
-    def get_all_intent_slots(self, domain_id, timeout=http_timeout):
-        url = self.base_url + '/v2/rpc/get_all_intent_slots'
+    def get_entity_values_for_nlu(self, domain_id, timeout=http_timeout):
+        url = self.base_url + '/v2/rpc/get_entity_values_for_nlu'
         headers = {'content-type': 'application/json'}
         data = requests.post(url,
                              data=json.dumps({
@@ -119,9 +107,9 @@ class CMSGate(object):
         assert (data.status_code == 200)
         return json.loads(data.text)
 
-    def get_intent_slots_without_value(self, domain_id, intent_name,
-                                       timeout=http_timeout):
-        url = self.base_url + '/v2/rpc/get_intent_slots_without_value'
+    def get_intent_entities_without_value(self, domain_id, intent_name,
+                                          timeout=http_timeout):
+        url = self.base_url + '/v2/rpc/get_intent_entities_without_value'
         headers = {'content-type': 'application/json'}
         data = requests.post(url,
                              data=json.dumps({
@@ -170,20 +158,6 @@ class CMSGate(object):
 
     def response_to_client(self, data, timeout=http_timeout):
         url = self.base_url + '/v2/dialog_question'
-        headers = {'content-type': 'application/json'}
-        try:
-            ret = requests.post(url,
-                                json=data,
-                                headers=headers,
-                                timeout=timeout)
-        except Exception as e:
-            logger.warning("remote api {} has an error: {}".format(url, e))
-            return False
-        return json.loads(ret.text)['data']
-
-    def response_to_client_cms_self(self, data, timeout=http_timeout):
-        url = 'http://127.0.0.1:{}'.format(
-            ConfigCMS.port) + '/v2/dialog_question'
         headers = {'content-type': 'application/json'}
         try:
             ret = requests.post(url,

@@ -1,8 +1,8 @@
 # encoding=utf-8
 import json
 import requests
-from vikicommon.config import ConfigDM, Config
-from vikicommon.util.util import generate_base_url
+from evashare.config import ConfigDM, Config
+from evashare.util.util import generate_base_url
 
 
 class DMGate(object):
@@ -13,7 +13,7 @@ class DMGate(object):
                                           "sidecar-vikidm")
 
     def process_question(self, data, timeout=Config.http_timeout):
-        url = self.base_url + '/v3/dm/robot/question/'
+        url = self.base_url + '/v3/evadm/robot/question/'
         headers = {
             'content-type': 'application/json',
             'uniqueId': str(data['sid']),
@@ -26,7 +26,7 @@ class DMGate(object):
         return ret.text
 
     def reset_robot(self, data, timeout=Config.http_timeout):
-        url = self.base_url + '/dm/robot/reset/'
+        url = self.base_url + '/evadm/robot/reset/'
         headers = {'content-type': 'application/json'}
         ret = requests.post(url, data=json.dumps(data), headers=headers,
                             timeout=timeout)
@@ -34,7 +34,7 @@ class DMGate(object):
         return ret.text
 
     def confirm(self, data, timeout=Config.http_timeout):
-        url = self.base_url + '/dm/robot/confirm/'
+        url = self.base_url + '/evadm/robot/confirm/'
         headers = {'content-type': 'application/json'}
         ret = requests.post(url, data=json.dumps(data), headers=headers,
                             timeout=timeout)
